@@ -66,46 +66,54 @@ export default {
 	],
 	data(){
 		return{
-			maxVisibleButtons: 7
+			maxVisibleButtons:5
 		}
 	},
-	computed: {
-		startPage() {
-			if (this.currentPage === 1) {
-				return 1;
+
+  computed: {
+    startPage() {
+      if (this.currentPage === 1) {
+        return 1;
+      }
+
+      if (this.currentPage === this.totalPages) {
+        return this.totalPages - this.maxVisibleButtons + 1;
+      }
+
+			if (this.currentPage === 82) {
+				return this.currentPage - 3
 			}
 
-			if (this.currentPage === this.totalPages) {
-				return this.totalPages - this.maxVisibleButtons + 1;
+			if (this.currentPage > 2) {
+				return this.currentPage - 2
 			}
 
-			return this.currentPage - 3;
+      return this.currentPage - 1;
 
-		},
-		endPage() {
+    },
+    endPage() {
+      return Math.min(this.startPage + this.maxVisibleButtons - 1, this.totalPages);
 
-			return Math.min(this.startPage + this.maxVisibleButtons - 1, this.totalPages);
+    },
+    pages() {
+      const range = [];
 
-		},
-		pages() {
-			const range = [];
+      for (let i = this.startPage; i <= this.endPage; i+= 1 ) {
+        range.push({
+          name: i,
+          isDisabled: i === this.currentPage
+        });
+      }
 
-			for (let i = this.startPage; i <= this.endPage; i += 1) {
-				range.push({
-					name: i,
-					isDisabled: i === this.currentPage
-				});
-			}
-
-			return range;
-		},
-		isInFirstPage() {
-			return this.currentPage === 1;
-		},
-		isInLastPage() {
-			return this.currentPage === this.totalPages;
-		},
-	},
+      return range;
+    },
+    isInFirstPage() {
+      return this.currentPage === 1;
+    },
+    isInLastPage() {
+      return this.currentPage === this.totalPages;
+    },
+  },
 	methods: {
 		onClickFirstPage() {
 			this.$emit('pagechanged', 1);
