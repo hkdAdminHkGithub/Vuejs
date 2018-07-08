@@ -1,20 +1,30 @@
+<style>
+	.disabled{
+		background: #559da3 !important;
+		color: rgb(235, 235, 235) !important;
+		font-weight: bold;
+	}
+</style>
+
 <template>
 	<nav aria-label="Page navigation"  class="col-md-8 offset-2">
 		<ul class="pagination justify-content-center">
-			<li class="page-item" >
+			<li class="page-item"
+					:class="{'disabled': isInFirstPage}"
+			>
 				<a class="page-link"
-					@click="onClickFirstPage"
-					:disabled="isInFirstPage"
+					@click="onNavPagintion($event, 1)"
 					aria-label="Go to first page"
 				>
 					Fisrt Page
 				</a>
 			</li>
 
-			<li class="page-item" >
+			<li class="page-item"
+					:class="{'disabled': isInFirstPage}"
+			>
 				<a class="page-link"
-					@click="onClickPreviousPage"
-					:disabled="isInFirstPage"
+					@click="onNavPagintion($event, currentPage - 1)"
 				>
 					<span aria-hidden="true">&laquo;</span>
 					<span class="sr-only">Next</span>
@@ -22,31 +32,32 @@
 			</li>
 
 			<li v-for="page in pages" :key="page.name" class="page-item"
-				:class="{ active: isPageActive(page.name) }"
-				:disabled="page.isDisabled"
+				:class="{ 'disabled' : isPageActive(page.name) }"
 			>
 				<a class="page-link"
-					@click="onClickPage(page.name)"
+					@click="onNavPagintion($event , page.name)"
+					:class="{ 'disabled' : isPageActive(page.name) }"
 				>
 					{{ page.name }}
 				</a>
 			</li>
 
-			<li class="page-item">
+			<li class="page-item"
+					:class="{'disabled': isInLastPage}"
+			>
 				<a class="page-link"
-					@click="onClickNextPage"
-					:disabled="isInLastPage"
-					aria-label="Go to next page"
+					@click="onNavPagintion($event, currentPage + 1)"
 				>
 					<span aria-hidden="true">&raquo;</span>
 					<span class="sr-only">Next</span>
 				</a>
 			</li>
 
-			<li class="page-item">
+			<li class="page-item"
+					:class="{'disabled': isInLastPage}"
+			>
 				<a class="page-link"
-					@click="onClickLastPage"
-					:disabled="isInLastPage"
+					@click="onNavPagintion($event, totalPages)"
 					aria-label="Go to last page"
 				>
 					Last
@@ -115,21 +126,25 @@ export default {
     },
   },
 	methods: {
-		onClickFirstPage() {
-			this.$emit('pagechanged', 1);
+		onNavPagintion(ev, page){
+			ev.preventDefault();
+			this.$emit('pagechanged', page)
 		},
-		onClickPreviousPage() {
-			this.$emit('pagechanged', this.currentPage - 1);
-		},
-		onClickPage(page) {
-			this.$emit('pagechanged', page);
-		},
-		onClickNextPage() {
-			this.$emit('pagechanged', this.currentPage + 1);
-		},
-		onClickLastPage() {
-			this.$emit('pagechanged', this.totalPages);
-		},
+		// onClickFirstPage(ev) {
+		// 	this.$emit('pagechanged', 1);
+		// },
+		// onClickPreviousPage() {
+		// 	this.$emit('pagechanged', this.currentPage - 1);
+		// },
+		// onClickPage(page) {
+		// 	this.$emit('pagechanged', page);
+		// },
+		// onClickNextPage() {
+		// 	this.$emit('pagechanged', this.currentPage + 1);
+		// },
+		// onClickLastPage() {
+		// 	this.$emit('pagechanged', this.totalPages);
+		// },
 		isPageActive(page) {
 			return this.currentPage === page;
 		},
